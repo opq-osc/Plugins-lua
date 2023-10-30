@@ -1,4 +1,8 @@
+local log = require("log")
 local Api = require("coreApi")
+local json = require("json")
+local http = require("http")
+local mysql = require("mysql")
 
 Fans = {}
 
@@ -20,7 +24,7 @@ function Fans.sendFriendMsg(CurrentQQ, data, Content, FileMd5, FileSize)
 			}
 		}
 	end
-	Api.Api_MagicCgiCmd(CurrentQQ, request)
+	return Api.Api_MagicCgiCmd(CurrentQQ, request)
 end
 
 --发送群消息
@@ -49,12 +53,12 @@ function Fans.sendGroupMsg(CurrentQQ, data, Content, Uin, FileId, FileMd5, FileS
 			}
 		}
 	end
-	Api.Api_MagicCgiCmd(CurrentQQ, request)
+	return Api.Api_MagicCgiCmd(CurrentQQ, request)
 end
 
 --发送好友语音消息
 function Fans.sendFriendVoiceMsg(CurrentQQ, data, FileMd5, FileSize, FileToken)
-	Api.Api_MagicCgiCmd(CurrentQQ, {
+	return Api.Api_MagicCgiCmd(CurrentQQ, {
 		CgiCmd = "MessageSvc.PbSendMsg",
 		CgiRequest = {
 			ToUin = data.MsgHead.FromUin,
@@ -81,12 +85,12 @@ function Fans.getFriendAddRequest(CurrentQQ, data, OpCode)
 	else
 		request.CgiRequest.OpCode = 3
 	end
-	Api.Api_MagicCgiCmd(CurrentQQ, request)
+	return Api.Api_MagicCgiCmd(CurrentQQ, request)
 end
 
 --发送群卡片消息-JSON
 function Fans.sendGroupJsonMsg(CurrentQQ, data, Content)
-	Api.Api_MagicCgiCmd(CurrentQQ, {
+	return Api.Api_MagicCgiCmd(CurrentQQ, {
 		CgiCmd = "MessageSvc.PbSendMsg",
 		CgiRequest = {
 			ToUin = data.MsgHead.FromUin,
@@ -99,7 +103,7 @@ end
 
 --发送群卡片消息-XML
 function Fans.sendGroupXmlMsg(CurrentQQ, data, Content)
-	Api.Api_MagicCgiCmd(CurrentQQ, {
+	return Api.Api_MagicCgiCmd(CurrentQQ, {
 		CgiCmd = "MessageSvc.PbSendMsg",
 		CgiRequest = {
 			ToUin = data.MsgHead.FromUin,
@@ -112,7 +116,7 @@ end
 
 --发送群回复消息
 function Fans.sendGroupReplyMsg(CurrentQQ, data, Content)
-	Api.Api_MagicCgiCmd(CurrentQQ, {
+	return Api.Api_MagicCgiCmd(CurrentQQ, {
 		CgiCmd = "MessageSvc.PbSendMsg",
 		CgiRequest = {
 			ToUin = data.MsgHead.FromUin,
@@ -135,7 +139,7 @@ end
 
 --发送群语音消息
 function Fans.sendGroupVoiceMsg(CurrentQQ, data, FileMd5, FileSize, FileToken)
-	Api.Api_MagicCgiCmd(CurrentQQ, {
+	return Api.Api_MagicCgiCmd(CurrentQQ, {
 		CgiCmd = "MessageSvc.PbSendMsg",
 		CgiRequest = {
 			ToUin = data.MsgHead.FromUin,
@@ -164,7 +168,7 @@ function Fans.setGroupBan(CurrentQQ, data, BanTime)
 	else
 		request.CgiRequest.BanTime = 120
 	end
-	Api.Api_MagicCgiCmd(CurrentQQ, request)
+	return Api.Api_MagicCgiCmd(CurrentQQ, request)
 end
 
 --处理群系统消息 OpCode: 1同意2拒绝3忽略 默认同意
@@ -182,12 +186,12 @@ function Fans.setGroupAddRequest(CurrentQQ, data, OpCode)
 	else
 		request.CgiRequest.OpCode = 1
 	end
-	Api.Api_MagicCgiCmd(CurrentQQ, request)
+	return Api.Api_MagicCgiCmd(CurrentQQ, request)
 end
 
 --获取群成员列表
 function Fans.getGroupMemberLists(CurrentQQ, data)
-	Api.Api_MagicCgiCmd(CurrentQQ, {
+	return Api.Api_MagicCgiCmd(CurrentQQ, {
 		CgiCmd = "GetGroupMemberLists",
 		CgiRequest = {
 			Uin = data.MsgHead.FromUin,
@@ -198,7 +202,7 @@ end
 
 --修改群成员昵称
 function Fans.setGroupMemberNick(CurrentQQ, data, Nick)
-	Api.Api_MagicCgiCmd(CurrentQQ, {
+	return Api.Api_MagicCgiCmd(CurrentQQ, {
 		CgiCmd = "SsoGroup.Op",
 		CgiRequest = {
 			OpCode = 2300,
@@ -211,7 +215,7 @@ end
 
 --移除群成员
 function Fans.setGroupKick(CurrentQQ, data)
-	Api.Api_MagicCgiCmd(CurrentQQ, {
+	return Api.Api_MagicCgiCmd(CurrentQQ, {
 		CgiCmd = "SsoGroup.Op",
 		CgiRequest = {
 			OpCode = 2208,
@@ -223,7 +227,7 @@ end
 
 --退出群聊
 function Fans.setGroupLeave(CurrentQQ, data)
-	Api.Api_MagicCgiCmd(CurrentQQ, {
+	return Api.Api_MagicCgiCmd(CurrentQQ, {
 		CgiCmd = "SsoGroup.Op",
 		CgiRequest = {
 			OpCode = 4247,
@@ -234,7 +238,7 @@ end
 
 --打开群红包
 function Fans.openGroupRedBag(CurrentQQ, data)
-	Api.Api_MagicCgiCmd(CurrentQQ, {
+	return Api.Api_MagicCgiCmd(CurrentQQ, {
 		CgiCmd = "OpenREDBAG",
 		CgiRequest = {
 			Wishing = data.MsgBody.RedBag.Wishing,
@@ -255,7 +259,7 @@ end
 
 --撤回消息
 function Fans.deleteMsg(CurrentQQ, data)
-	Api.Api_MagicCgiCmd(CurrentQQ, {
+	return Api.Api_MagicCgiCmd(CurrentQQ, {
 		CgiCmd = "GroupRevokeMsg",
 		CgiRequest = {
 			Uin = data.MsgHead.FromUin,
@@ -269,47 +273,62 @@ end
 function Fans.uploadRes(CurrentQQ, CommandId, FileUrl, FilePath, Base64Buf)
 	local request = {
 		CgiCmd = "PicUp.DataUp",
+		CgiRequest = {
+			CommandId = CommandId
+		}
 	}
-	if CommandId ~= nil then
-		request.CgiRequest.CommandId = CommandId
-	else
-		request.CgiRequest.CommandId = 2
-	end
 	if FileUrl ~= nil then
 		request.CgiRequest.FileUrl = FileUrl
-	end
-	if FilePath ~= nil then
+	elseif FilePath ~= nil then
 		request.CgiRequest.FilePath = FilePath
-	end
-	if Base64Buf ~= nil then
+	elseif Base64Buf ~= nil then
 		request.CgiRequest.Base64Buf = Base64Buf
 	end
-	Api.Api_MagicCgiCmd(CurrentQQ, request)
+	return Api.Api_MagicCgiCmd(CurrentQQ, request)
 end
 
+-- 模糊查询数组元素是否在关键词中
+function Fans.fuzzySearch(array, keyword)
+	for _, value in ipairs(array) do
+		if string.match(keyword, value) then
+			return true
+		end
+	end
+	return false
+end
+
+-- 判断关键词是否在数组中
+function Fans.isInArray(keyword, array)
+	for _, value in ipairs(array) do
+		if value == keyword then
+			return true
+		end
+	end
+	return false
+end
 
 -- 检查是否是表达式
 function Fans.isExpression(str)
-    -- 定义表达式的模式
-    local pattern = "^[%w()+*/%-%.]+$"
+	-- 定义表达式的模式
+	local pattern = "^[%w()+*/%-%.]+$"
 
-    -- 使用模式匹配进行判断
-    if str:match(pattern) then
-        return true
-    else
-        return false
-    end
+	-- 使用模式匹配进行判断
+	if str:match(pattern) then
+		return true
+	else
+		return false
+	end
 end
 
 -- 计算器函数
 function Fans.calculator(expression)
-    local func = loadstring("return " .. expression)
-    if func then
-        setfenv(func, {})
-        return func()
-    else
-        return nil, "无效的表达式"
-    end
+	local func = loadstring("return " .. expression)
+	if func then
+		setfenv(func, {})
+		return func()
+	else
+		return nil, "无效的表达式"
+	end
 end
 
 -- 延迟执行
