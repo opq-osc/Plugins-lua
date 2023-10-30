@@ -4,7 +4,6 @@ local Api = require("coreApi")
 local json = require("json")
 local http = require("http")
 local mysql = require("mysql")
-local utils = require("Utils")
 local Go = require("Fans")
 
 local admin_qq = 9778566 -- 换为自己的QQ号

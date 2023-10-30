@@ -4,7 +4,6 @@ local Api = require("coreApi")
 local json = require("json")
 local http = require("http")
 local mysql = require("mysql")
-local utils = require("Utils")
 local Go = require("Fans")
 
 function ReceiveFriendMsg(CurrentQQ, data)
