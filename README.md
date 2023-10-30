@@ -27,3 +27,6 @@ Go.getFriendAddRequest(CurrentQQ, data, "Hello, World!")
 `...`
 
 其他函数名称请看 Fans.lua 应该都能理解
+
+部分插件是升级以下大神的旧版插件而来 感谢
+https://github.com/opq-osc/lua-plugins
