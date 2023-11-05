@@ -287,6 +287,16 @@ function Fans.uploadRes(CurrentQQ, CommandId, FileUrl, FilePath, Base64Buf)
 	return Api.Api_MagicCgiCmd(CurrentQQ, request)
 end
 
+--QueryUinByUid
+function Fans.queryUinByUid(CurrentQQ, Uid)
+	return Api.Api_MagicCgiCmd(CurrentQQ, {
+		CgiCmd = "QueryUinByUid",
+		CgiRequest = {
+			Uid = Uid
+		}
+	})
+end
+
 --添加任务
 function Fans.cronAdd(CurrentQQ, BotUin, Sepc, FileName, FuncName)
 	return Api.Api_MagicCgiCmd(CurrentQQ, {
@@ -336,6 +346,16 @@ function Fans.isInArray(keyword, array)
 		end
 	end
 	return false
+end
+
+-- 字符串转换为数组
+function Fans.explode(delimiter, str)
+	local result = {}
+	local pattern = string.format("([^%s]+)", delimiter)
+	for match in str:gmatch(pattern) do
+		table.insert(result, match)
+	end
+	return result
 end
 
 -- 检查是否是表达式
