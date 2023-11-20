@@ -47,7 +47,7 @@ function ReceiveEvents(CurrentQQ, data)
 		if data.EventData.MsgHead.MsgType == 33 then
 			local res = Go.queryUinByUid(CurrentQQ, data.EventData.Event.Uid)
 			Go.Sleep(math.random(2, 5))
-			sendGroupMsg(CurrentQQ, 88888888, "⬅让我一起欢迎这货入坑吧"..res.ResponseData[1].Nick)
+			sendGroupMsg(CurrentQQ, data.EventData.MsgHead.FromUin, res.ResponseData[1].Nick.."⬅让我一起欢迎这货入坑吧")
 		end
 	end
 
@@ -56,7 +56,7 @@ function ReceiveEvents(CurrentQQ, data)
 		if data.EventData.MsgHead.MsgType == 34 then
 			local res = Go.queryUinByUid(CurrentQQ, data.EventData.Event.Uid)
 			Go.Sleep(math.random(2, 5))
-			sendGroupMsg(CurrentQQ, 88888888, "这货离开了我们"..res.ResponseData[1].Nick)
+			sendGroupMsg(CurrentQQ, data.EventData.MsgHead.FromUin, res.ResponseData[1].Nick.."这货离开了我们")
 		end
 	end
 
