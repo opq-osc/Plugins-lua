@@ -4,7 +4,6 @@ local Api = require("coreApi")
 local json = require("json")
 local http = require("http")
 local mysql = require("mysql")
-local utils = require("Utils")
 local Go = require("Fans")
 
 function auto_sign(CurrentQQ, task)
@@ -17,22 +16,14 @@ function auto_sign(CurrentQQ, task)
 end
 
 --发送群消息
-function sendGroupMsg(CurrentQQ, ToUin, FileId, FileMd5, FileSize)
+function sendGroupMsg(CurrentQQ, ToUin, Content)
 	local request = {
 		CgiCmd = "MessageSvc.PbSendMsg",
 		CgiRequest = {
 			ToUin = ToUin,
 			ToType = 2,
+			Content = Content
 		}
 	}
-	if FileMd5 ~= nil then
-		request.CgiRequest.Images = {
-			{
-				FileId = FileId,
-				FileMd5 = FileMd5,
-				FileSize = FileSize
-			}
-		}
-	end
 	return Api.Api_MagicCgiCmd(CurrentQQ, request)
 end

@@ -14,7 +14,7 @@ function ReceiveGroupMsg(CurrentQQ, data)
 
 	if string.find(data.MsgBody.Content, "!买家秀") then
 		local res = Go.uploadRes(CurrentQQ, 2, 'https://api.uomg.com/api/rand.img3')
-		sendGroupMsg(CurrentQQ, 79379938, "请鉴赏 15s后销毁该条消息", res.ResponseData.FileId, res.ResponseData.FileMd5, res.ResponseData.FileSize)
+		sendGroupMsg(CurrentQQ, data.MsgHead.FromUin, "请鉴赏 15s后销毁该条消息", res.ResponseData.FileId, res.ResponseData.FileMd5, res.ResponseData.FileSize)
 	end
 	return 1
 end

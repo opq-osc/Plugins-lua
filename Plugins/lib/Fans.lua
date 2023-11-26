@@ -241,18 +241,7 @@ function Fans.openGroupRedBag(CurrentQQ, data)
 	return Api.Api_MagicCgiCmd(CurrentQQ, {
 		CgiCmd = "OpenREDBAG",
 		CgiRequest = {
-			Wishing = data.MsgBody.RedBag.Wishing,
-			Des = data.MsgBody.RedBag.Des,
-			RedType = data.MsgBody.RedBag.RedBag,
-			Listid = data.MsgBody.RedBag.Listid,
-			Authkey = data.MsgBody.RedBag.Authkey,
-			Channel = data.MsgBody.RedBag.Channel,
-			StingIndex = data.MsgBody.RedBag.StingIndex,
-			TransferMsg = data.MsgBody.RedBag.TransferMsg,
-			Token_17_2 = data.MsgBody.RedBag.Token_17_2,
-			Token_17_3 = data.MsgBody.RedBag.Token_17_3,
-			FromUin = data.MsgBody.RedBag.FromUin,
-			FromType = data.MsgBody.RedBag.FromType
+			RedBag = data.MsgBody.RedBag
 		}
 	})
 end
